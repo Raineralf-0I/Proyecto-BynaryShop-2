@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BynaryShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 style="text-align: center; color: white;">BynaryShop</h1>
+    <img src="ruta/a/tu/logo.png" alt="Logo" id="logo"> 
+
+    <div id="welcome-message" style="display: block;">
+        <div id="welcome-content">
+            <span id="close-welcome" style="cursor: pointer; float: right;">&times;</span>
+            <h2>Bienvenido a BynaryShop</h2>
+            <p>Estamos encantados de tenerte aquí. Explora nuestros productos y disfruta de una experiencia de compra única.</p>
+        </div>
+    </div>
+
+    <div id="user-info" style="float: right; margin-top: 20px;"></div>
+    <button id="logout-btn" style="display: none;">Cerrar Sesión</button>
+
+    <div id="login-section" style="display: none;">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="username" placeholder="Usuario">
+        <input type="password" id="password" placeholder="Contraseña">
+        <button id="login-btn">Iniciar Sesión</button>
+        <p id="login-error" style="color: red;"></p>
+    </div>
+
+    <div id="register-section" style="display: none;">
+        <h2>Registrarse</h2>
+        <input type="text" id="new-username" placeholder="Nuevo Usuario">
+        <input type="password" id="new-password" placeholder="Nueva Contraseña">
+        <button id="register-btn">Registrarse</button>
+        <p id="register-error" style="color: red;"></p>
+    </div>
+
+    <div id="admin-interface" style="display: none;">
+        <h2>Agregar Nuevo Producto</h2>
+        <form id="add-product-form" onsubmit="addProduct(); return false;">
+            <input type="text" id="product-name" placeholder="Nombre del producto" required>
+            <input type="number" id="product-price" placeholder="Precio" required>
+            <input type="file" id="product-image" accept="image/*" required> 
+            <button type="submit">Agregar Producto</button>
+        </form>
+        
+        <h2>Eliminar Producto</h2>
+        <input type="number" id="product-id-to-delete" placeholder="ID del producto a eliminar" required>
+        <button onclick="deleteProduct(parseInt(document.getElementById('product-id-to-delete').value))">Eliminar Producto</button>
+    </div>
+
+    <div id="edit-product-section" style="display: none;">
+        <h2>Editar Producto</h2>
+        <input type="text" id="edit-product-name" placeholder="Nombre del producto" required>
+        <input type="number" id="edit-product-price" placeholder="Precio" required>
+        <input type="text" id="edit-product-image" placeholder="URL de la imagen" required>
+        <input type="hidden" id="edit-product-id"> 
+        <button id="update-product-btn">Actualizar Producto</button>
+    </div>
+
+    <div id="product-list"></div>
+
+    <div id="login-prompt">
+        Regístrate en BynaryShop para que empieces la búsqueda de tus productos deseados.
+    </div>
+
+    <div id="cart-section" style="display: none;">
+        <h2>Carrito de Compras</h2>
+        <ul id="cart-items"></ul>
+        <p>Precio Total: $<span id="total-price">0.00</span></p>
+        <button id="buy-btn">Comprar</button>
+    </div>
+
+    <div id="bankingModal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="close-modal">&times;</span>
+            <h2>Datos Bancarios</h2>
+            <form id="bankingForm">
+                <label for="accountNumber">Número de Cuenta:</label>
+                <input type="text" id="accountNumber" required>
+                
+                <label for="bankName">Nombre del Banco:</label>
+                <input type="text" id="bankName" required>
+                
+                <button type="submit">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('buy-btn').addEventListener('click', function() {
+            openBankingInterface(); 
+        });
+
+        function openBankingInterface() {
+            const modal = document.getElementById('bankingModal');
+            modal.style.display = 'block';
+        }
+
+        document.getElementById('close-modal').addEventListener('click', function() {
+            document.getElementById('bankingModal').style.display = 'none'; 
+        });
+
+        function validateBankDetails(accountNumber, bankName) {
+            const accountNumberRegex = /^[0-9]{10,}$/; 
+            return accountNumberRegex.test(accountNumber) && bankName.trim() !== '';
+        }
+
+        document.getElementById('bankingForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const accountNumber = document.getElementById('accountNumber').value;
+            const bankName = document.getElementById('bankName').value;
+
+            if (validateBankDetails(accountNumber, bankName)) {
+                alert("Compra realizada exitosamente. Tus datos bancarios han sido registrados.");
+                cart = [];
+                updateCart(); 
+                document.getElementById('bankingModal').style.display = 'none'; 
+            } else {
+                alert("Datos bancarios inválidos. Asegúrate de que el número de cuenta tenga al menos 10 dígitos y que el nombre del banco no esté vacío.");
+            }
+        });
+    </script>
+</body>
+</html>
